@@ -1,0 +1,4 @@
+--- In this capstone project, I analyze the data to see if there is a relationship between the changes in female involvement in the Olympics and the overall performance of the men's teams. 
+
+select * from athlete_events_final 
+
