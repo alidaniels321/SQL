@@ -1,4 +1,122 @@
 --- In this capstone project, I analyze the data to see if there is a relationship between the changes in female involvement in the Olympics and the overall performance of the men's teams. 
 
+--An overall view of the table and its contents. 
 select * from athlete_events_final 
+
+
+--Total number of events recorded in the dataset 
+select count (*) from athlete_events_final
+
+
+--Number of events in each season. Summer shows significantly more events. For this reason, I will focus my analysis only on the Summer events.  
+Select season, count(season) from athlete_events_final group by season
+
+
+--Number of males/females participating in events. Significantly more males. 
+Select sex, count(sex) from athlete_events_final group by sex
+
+
+--Total number of females representing each country in the summer events starting in 1972 limited to the top 50 countries to account of the countries that started with very few female athletes. 
+select 
+  team, 
+  count(id) as total_female
+from athlete_events_final 
+where Sex = "F" and year >1968 and season = "Summer"
+group by team 
+order by total_female desc
+limit 50
+
+
+--This table shows the number of medals (of any kind) won by men in the summer Olympics from 1972 to 2016, limited to the top 50 countries. 
+select 
+  team, 
+  count(medal) as total_medals
+from athlete_events_final 
+where Sex = "M" and year >1968 and season = "Summer"
+group by team 
+order by total_medals desc
+limit 50
+
+
+--Percent change in women's participation from 1970 onward by country
+Create or replace table Female_2016 as
+  Select 
+    team, 
+    count (id) as total_female_2016
+  from athlete_events_final
+  where Sex = "F" and year = 2016 and season = "Summer"
+  group by team 
+  order by total_female_2016 desc
+  limit 50;
+
+
+Create or replace table Female_1972 as
+   Select 
+    team, 
+    count (id) as total_female_1972
+  from athlete_events_final
+  where Sex = "F" and year = 1972 and season = "Summer"
+  group by team 
+  order by total_female_1972 desc
+  limit 50;
+
+
+--This table shows the percent change of women participants on each team from 1972 to 2016.
+Create or replace table Female_Participant_Percent_Change as 
+Select
+  female_2016.team,
+  total_female_1972,
+  total_female_2016, 
+  ((total_female_2016-total_female_1972)/(total_female_1972)) as Female_percent_change
+from Female_2016
+join Female_1972 on female_2016.team = female_1972.team
+order by female_percent_change desc;
+
+Select team, female_percent_change
+from Female_Participant_Percent_Change
+
+
+--Creating tables to show the percent change in men's performance 
+Create or replace table Male_Medals_2016 as
+  Select 
+    team, 
+    count (medal) as total_male_medals_2016
+  from athlete_events_final
+  where Sex = "M" and year = 2016 and season = "Summer"
+  group by team 
+  order by total_male_medals_2016 desc
+  limit 50;
+
+Create or replace table Male_Medals_1972 as
+   Select 
+    team, 
+    count (medal) as total_male_medals_1972
+  from athlete_events_final
+  where Sex = "M" and year = 1972 and season = "Summer"
+  group by team 
+  order by total_male_medals_1972 desc
+  limit 50;
+  
+  
+  ----This table shows the percent change of medals won by males on each team from 1972 to 2016.
+Create or replace table Male_Medals_Percent_Change as
+Select
+  Male_Medals_2016.team,
+  total_male_medals_1972,
+  total_male_medals_2016, 
+  ((total_male_medals_2016-total_male_medals_1972)/(total_male_medals_1972)) as Male_Medals_percent_change
+from Male_Medals_2016
+join Male_Medals_1972 on Male_Medals_2016.team = Male_medals_1972.team
+order by Male_Medals_percent_change desc;
+
+
+Select team, male_medals_percent_change
+from Male_Medals_Percent_Change
+
+
+Select
+ Female_Participant_Percent_Change.team, male_medals_percent_change, female_percent_change
+from Male_Medals_Percent_Change
+join Female_Participant_Percent_Change on Male_Medals_Percent_Change.team = Female_Participant_Percent_Change.team
+order by female_percent_change desc
 
