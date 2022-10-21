@@ -1,0 +1,28 @@
+--Creating a store database 
+
+Create Table Target (id INTEGER PRIMARY KEY, item TEXT, aisle INTEGER, quantity_sold INTEGER, price INTEGER, on_sale TEXT, department TEXT);
+
+Insert INTO Target VALUES (1, "Febreeze", 6, 20, 6.99, "No", "Home");
+Insert INTO Target VALUES (2, "Glade Plug In", 6, 20, 3.99, "No", "Home");
+Insert INTO Target Values (3, "Candles", 6, 28, 4.99, "Yes", "Home");
+Insert INTO Target VALUES (4, "Paper Towels", 10, 38, 18.99, "No", "Home");
+Insert INTO Target VALUES (5, "AirPods", 21, 18, 119.99, "Yes", "Technology");
+Insert INTO Target VALUES (6, "Iphone", 21, 5, 299.99, "No", "Technology");
+Insert INTO Target VALUES (7, "Pampers Cruisers Diapers", 32, 30, 44.99, "No", "Baby");
+Insert INTO Target VALUES (8, "Pampers Sensitive Wipes", 32, 30, 21.99, "Yes", "Baby");
+Insert INTO Target VALUES (9, "Holiday Wreath", 50, 7, 29.99, "Yes", "Holiday");
+Insert INTO Target VALUES (10, "Hot Wheels Track", 45, 3, 59.99, "Yes", "Toys");
+Insert INTO Target VALUES (11, "Barbie's Mansion", 46, 5, 59.99, "Yes", "Toys");
+Insert INTO Target VALUES (12, "Bathroom Towels", 12, 13, 19.99, "No", "Home");
+Insert INTO Target VALUES (13, "Shower Curtain", 12, 4, 19.99, "No", "Home");
+Insert INTO Target VALUES (14, "Gift Wrapping Paper", 2, 23, 9.99, "No", "Gift");
+Insert INTO Target VALUES (15, "Birthday Cards", 2, 43, 1.99, "No", "Gift");
+
+-- Displaying the database ordered by price
+Select * from Target order by price asc;
+
+--Which items are currently on sale in this store? This could potentially influence the shopping list of consumers. 
+Select * from Target where on_sale= "Yes";
+
+--What is the average price of items in each department? 
+Select department, avg(price) as average_price from Target group by department order by average_price asc;
