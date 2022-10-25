@@ -1,0 +1,37 @@
+#In this SQL, I'm querying a database with multiple tabes in it to quantify statistics about customer and order data. 
+
+
+--How many orders were placed in January?
+SELECT count(OrderID) from BIT_DB.JanSales;
+
+--How many of those orders were for an iPhone?
+SELECT count(OrderID) from BIT_DB.JanSales
+WHERE Product = 'iPhone';
+
+--Select the customer account numbers for all the orders that were placed in February.
+Select acctnum from BIT_DB.customers c 
+inner join BIT_DB.FebSales FS on c.order_id = FS.orderID;
+
+--Which product was the cheapest one sold in January, and what was the price?
+Select distinct product, price from BIT_DB.JanSales 
+Where price in (Select min(price) from BIT_DB.JanSales); 
+
+--What is the total revenue for each product sold in January? (Revenue can be calculated using the number of products sold and the price of the products).
+Select product, sum(quantity)*price as revenue
+from BIT_DB.JanSales
+GROUP BY product
+Order by revenue desc;
+
+--Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+Select product, sum(quantity) as quantity_sold, sum(quantity)*price as revenue
+From BIT_DB.FebSales
+Where location = '548 Lincoln St, Seattle, WA 98101'
+GROUP BY product;
+
+--How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
+Select 
+count(c.acctnum)as total_customers,
+avg (quantity*price) as Average_spent
+from BIT_DB.FebSales FS
+left join BIT_DB.customers c on FS.orderID=c.order_id 
+where FS.quantity > 2;
