@@ -1,4 +1,4 @@
-/* In this code, I am querying a database that's contains Nexflix data to answer questions.
+/* In this code, I am querying a database that's contains Netflix data to answer questions.
 /* Note: This code uses PostgreSQL dialect. */
 
 #1. How many movie titles are there in the database? (movies only, not tv shows) 
