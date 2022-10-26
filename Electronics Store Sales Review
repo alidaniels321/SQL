@@ -35,3 +35,9 @@ avg (quantity*price) as Average_spent
 from BIT_DB.FebSales FS
 left join BIT_DB.customers c on FS.orderID=c.order_id 
 where FS.quantity > 2;
+
+--List all the products sold in Los Angeles in February, and include how many of each were sold.
+Select product, sum(quantity)
+FROM BIT_DB.FebSales 
+WHERE location like "%Los Angeles%"
+GROUP BY product
